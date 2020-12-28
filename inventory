@@ -1,0 +1,6 @@
+## Example inventory file. Only runs against localhost, and only runs role_debug_ping w/ playbook-generic.yml
+all:
+    hosts:
+        localhost:
+            var_role_list:
+            - "role_debug_ping"

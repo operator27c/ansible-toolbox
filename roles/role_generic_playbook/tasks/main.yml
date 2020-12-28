@@ -1,0 +1,46 @@
+---
+  ## Summary of action:
+  #
+  # This role will use the [var_role_list] variable to loop through and include the specified roles. 
+  #
+  # Has error-checking. If [role_critical_error] is set to True in a sub-role, the playbook should halt all execution.
+  #
+  # Note: this error-trap is only supported in roles that are configured to use it. Meaning, if a sub-role
+  #       encounters a fault, it will exit the current role, and move onto the next list item.
+  #
+  ## Required variables:
+  # var_role_list -- is a list that needs to be specified that contains the roles you wish to execute on the host(s)
+  #                  that you gave within playbook-generic.yml execution.
+  ##
+  - name: Initialization block
+    block:
+    - name: Set default playbook-generic.yml variables
+      set_fact:
+        role_critical_error: False
+        role_critical_error_reason: "NULL"
+    - name: Check if var_role_list has been declared
+      set_fact:
+        role_critical_error: True
+        role_critical_error_reason: "The fact 'var_role_list' was not declared during playbook execution."
+      when: (var_role_list is not defined) or (var_role_list|length == 0)
+    - name: Fail if role_critical_error is True
+      fail:
+        msg: "{{ role_critical_error_reason | string }}"
+      when: (role_critical_error|bool)
+
+  - name: Role execution block
+    block:
+      - name: In loop -- Include the role {{ var_item_role }}
+        include_role: 
+          name: "{{ var_item_role | string }}"
+        loop: "{{ var_role_list | list }}"
+        loop_control:
+          loop_var: var_item_role 
+    rescue:
+      - name: Error trapper -- check if critical error declared
+        debug:
+          msg: "An error has been trapped during the role execution loop."
+      - name: Fail only if role_critical_error is True
+        fail:
+          msg: "{{ role_critical_error_reason | string }}"
+        when: (role_critical_error|bool)

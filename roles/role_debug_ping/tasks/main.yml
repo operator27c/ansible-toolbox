@@ -1,0 +1,14 @@
+---
+  ## Available variables:
+  #  role_debug_ping_hostname -- defaults to ansible_fqdn
+  #  role_debug_ping_count -- defaults to 5 ICMP ping requests
+  ##
+  - name: Ping [{{ role_debug_ping_hostname | default(ansible_fqdn) | string }}] from ansible host [{{ role_debug_ping_count | default(5) | int }}] times
+    shell: ping "{{ role_debug_ping_hostname | default(ansible_fqdn) | string }}" -c {{ role_debug_ping_count | default(5) | int }} | grep -A 1 "transmitted"
+    args:
+      warn: false
+    register: role_ping_response
+    delegate_to: localhost
+  - name: Ping cmd output
+    debug:
+      msg: "{{ role_ping_response.stdout | string}}"

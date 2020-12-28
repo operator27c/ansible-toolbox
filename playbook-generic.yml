@@ -1,0 +1,5 @@
+---
+- hosts: "{{ var_playbook_hosts | default('localhost') | string }}"
+  gather_facts: "{{ var_gatherfacts | default(true) | bool }}"
+  roles: 
+    - "role_generic_playbook"
