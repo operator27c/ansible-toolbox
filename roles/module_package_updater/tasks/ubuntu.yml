@@ -36,3 +36,11 @@
         delay: 5
         timeout: 300
     when: (apt_update_result is changed) and (var_module_package_updater_reboot|bool)
+    rescue:
+      - name: Trap error if host doesn't come back up after a requested reboot.
+        set_fact:
+          role_critical_error: True
+          role_critical_error_reason: "An error occurred while attempting to reboot {{ ansible_fqdn | string }}. Check the logs for more information."
+      - name: Fail if role_critical_error is True
+        fail:
+          msg: "{{ role_critical_error_reason | string }}"
