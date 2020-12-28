@@ -1,0 +1,38 @@
+---
+  - name: Update block
+    block:
+    - name: Run the equivalent of "apt-get update" as a separate step
+      apt:
+        update_cache: yes
+      become: yes
+      become_user: root
+    - name: Update all packages to the latest version
+      apt:
+        upgrade: dist
+      register: apt_update_result
+      become: yes
+      become_user: root
+    rescue:
+      - name: Trap any apt update / upgrade errors, and fail out of nested roles (if using playbook-generic.yml)
+        set_fact:
+          role_critical_error: True
+          role_critical_error_reason: "An error occurred while running apt update or upgrade operations on {{ ansible_fqdn | string }}. Check the logs for more information."
+      - name: Fail if role_critical_error is True
+        fail:
+          msg: "{{ role_critical_error_reason | string }}"
+
+  - name: Reboot operations (if requested)
+    block:
+    - name: Reboot if there was a change AND if authorized.
+      shell: "sleep 5 && reboot"
+      async: 1
+      poll: 0
+      become: yes
+      become_user: root
+    - name: Wait for the reboot to complete if there was a change AND if reboot was authorized.
+      wait_for_connection:
+        connect_timeout: 20
+        sleep: 5
+        delay: 5
+        timeout: 300
+    when: (apt_update_result is changed) and (var_module_package_updater_reboot|bool)
