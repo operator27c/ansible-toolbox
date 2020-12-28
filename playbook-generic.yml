@@ -1,5 +1,15 @@
 ---
-- hosts: "{{ var_playbook_hosts | default('localhost') | string }}"
-  gather_facts: "{{ var_gatherfacts | default(true) | bool }}"
-  roles: 
-    - "role_generic_playbook"
+# Description:  This playbook will allow you to string together multiple self-contained roles 
+#               into one playbook, specified by [var_role_list] at execution in AWX, 
+#               or within hostvars. Look at the role called 'role_generic_playbook' for more information.
+# 
+# Required Vars: 
+# - var_playbook_hosts -- specifies the host/group(s) that you want to run stuff on
+# - var_role_list -- specifies a list of roles that you want to run. Order is important, loops sequentially. 
+#
+## 
+
+  - hosts: "{{ var_playbook_hosts | default('localhost') | string }}"
+    gather_facts: "{{ var_gatherfacts | default(true) | bool }}"
+    roles: 
+      - "role_generic_playbook"
