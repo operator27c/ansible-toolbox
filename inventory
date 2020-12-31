@@ -2,5 +2,5 @@ all:
     hosts:
         localhost:
             var_role_list:
-            - "role_debug_ping"
-            - "module_package_updater"
+            - "role.debug.ping"
+            - "role.system.updater"
