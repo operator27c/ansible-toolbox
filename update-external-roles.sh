@@ -16,27 +16,29 @@ else
 fi
 
 cd $PROJECT_HOME
+echo $PROJECT_HOME
+sleep 5
 
 ##
 ## geerlingguy docker role
 ## Reference: https://github.com/geerlingguy/ansible-role-docker
 ## 
-rm -rfv $PROJECT_HOME/roles/geerlingguy.docker
+rm -rfv "$PROJECT_HOME/roles/geerlingguy.docker"
 wget https://github.com/geerlingguy/ansible-role-docker/archive/master.zip -P /tmp/ansible-role-docker
-unzip /tmp/ansible-role-docker/master.zip -d $PROJECT_HOME/roles/.
+unzip /tmp/ansible-role-docker/master.zip -d "$PROJECT_HOME/roles/."
 rm -rfv /tmp/ansible-role-docker
-rm -rfv $PROJECT_HOME/roles/ansible-role-docker-master/.github
-mv $PROJECT_HOME/roles/ansible-role-docker-master $PROJECT_HOME/roles/geerlingguy.docker
+rm -rfv "$PROJECT_HOME/roles/ansible-role-docker-master/.github"
+mv "$PROJECT_HOME/roles/ansible-role-docker-master" "$PROJECT_HOME/roles/geerlingguy.docker"
 
 ##
 ## geerlingguy pip role
 ## Reference: https://github.com/geerlingguy/ansible-role-pip
 ##
-rm -rfv $PROJECT_HOME/roles/geerlingguy.pip
+rm -rfv "$PROJECT_HOME/roles/geerlingguy.pip"
 wget https://github.com/geerlingguy/ansible-role-pip/archive/master.zip -P /tmp/ansible-role-pip
-unzip /tmp/ansible-role-pip/master.zip -d $PROJECT_HOME/roles/.
+unzip /tmp/ansible-role-pip/master.zip -d "$PROJECT_HOME/roles/."
 rm -rfv /tmp/ansible-role-pip
-rm -rfv $PROJECT_HOME/roles/ansible-role-pip-master/.github
-mv $PROJECT_HOME/roles/ansible-role-pip-master $PROJECT_HOME/roles/geerlingguy.pip
+rm -rfv "$PROJECT_HOME/roles/ansible-role-pip-master/.github"
+mv "$PROJECT_HOME/roles/ansible-role-pip-master" "$PROJECT_HOME/roles/geerlingguy.pip"
 
 
