@@ -7,8 +7,13 @@
 set -o errexit
 set -o pipefail
 set -o nounset
-
-PROJECT_HOME=/home/tylong/git/ansible-toolbox
+## Fail if no arguments are passed, set args to PROJECT_HOME if present...
+if [ "$#" -eq 0 ] ; then
+	echo "No arg supplied -- Need to specify the PROJECT_HOME variable!"
+	exit 1
+else
+	PROJECT_HOME="$*"
+fi
 
 cd $PROJECT_HOME
 
